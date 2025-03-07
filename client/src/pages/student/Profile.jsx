@@ -57,14 +57,14 @@ const Profile = () => {
   useEffect(() => {
     if (isSuccess) {
       refetch();
-      toast.success(data.message || "Profile updated.");
+      toast.success(data.message || "Hồ sơ đã được cập nhật.");
     }
     if (isError) {
-      toast.error(error.message || "Failed to update profile");
+      toast.error(error.message || "Không cập nhật được hồ sơ");
     }
   }, [error, updateUserData, isSuccess, isError]);
 
-  if (isLoading) return <h1>Profile Loading...</h1>;
+  if (isLoading) return <h1>Đang tải hồ sơ...</h1>;
 
   const user = data && data.user;
 
@@ -73,7 +73,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 my-10">
-      <h1 className="font-bold text-2xl text-center md:text-left">PROFILE</h1>
+      <h1 className="font-bold text-2xl text-center md:text-left">HỒ SƠ</h1>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
@@ -87,7 +87,7 @@ const Profile = () => {
         <div>
           <div className="mb-2">
             <h1 className="font-semibold text-gray-900 dark:text-gray-100 ">
-              Name:
+              Tên:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
                 {user.name}
               </span>
@@ -103,7 +103,7 @@ const Profile = () => {
           </div>
           <div className="mb-2">
             <h1 className="font-semibold text-gray-900 dark:text-gray-100 ">
-              Role:
+              Vai trò:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
                 {user.role.toUpperCase()}
               </span>
@@ -112,30 +112,30 @@ const Profile = () => {
           <Dialog>
             <DialogTrigger asChild>
               <Button size="sm" className="mt-2">
-                Edit Profile
+                Chỉnh sửa hồ sơ
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogTitle>Chỉnh sửa hồ sơ</DialogTitle>
                 <DialogDescription>
-                  Make changes to your profile here. Click save when you're
-                  done.
+                Thực hiện thay đổi cho hồ sơ của bạn tại đây. Nhấp vào lưu khi bạn
+                hoàn tất.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label>Name</Label>
+                  <Label>Tên</Label>
                   <Input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Name"
+                    placeholder="Tên"
                     className="col-span-3"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label>Profile Photo</Label>
+                  <Label>Hình ảnh</Label>
                   <Input
                     onChange={onChangeHandler}
                     type="file"
@@ -151,11 +151,10 @@ const Profile = () => {
                 >
                   {updateUserIsLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                      wait
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vui lòng chờ
                     </>
                   ) : (
-                    "Save Changes"
+                    "Lưu thay đổi"
                   )}
                 </Button>
               </DialogFooter>
@@ -164,10 +163,10 @@ const Profile = () => {
         </div>
       </div>
       <div>
-        <h1 className="font-medium text-lg">Courses you're enrolled in</h1>
+        <h1 className="font-medium text-lg">Các khóa học bạn đã đăng ký</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
           {user.enrolledCourses.length === 0 ? (
-            <h1>You haven't enrolled yet</h1>
+            <h1>Bạn vẫn chưa đăng ký</h1>
           ) : (
             user.enrolledCourses.map((course) => (
               <Course course={course} key={course._id} />

@@ -23,6 +23,9 @@ import {
 } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
+import LearningUI from "./pages/home";
+import Footer from "./pages/footer";
+import PromoSection from "./pages/student/slide";
 
 const appRouter = createBrowserRouter([
   {
@@ -33,8 +36,11 @@ const appRouter = createBrowserRouter([
         path: "/",
         element: (
           <>
-            <HeroSection />
+            <PromoSection />
+            {/* <HeroSection /> */}
             <Courses />
+            <LearningUI />
+            <Footer />
           </>
         ),
       },
@@ -51,6 +57,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MyLearning />
+            <Footer />
           </ProtectedRoute>
         ),
       },
@@ -59,6 +66,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+            <Footer />
           </ProtectedRoute>
         ),
       },
@@ -67,6 +75,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SearchPage />
+            <Footer />
           </ProtectedRoute>
         ),
       },
@@ -75,6 +84,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CourseDetail />
+            <Footer />
           </ProtectedRoute>
         ),
       },
@@ -83,7 +93,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PurchaseCourseProtectedRoute>
-            <CourseProgress />
+              <CourseProgress />
             </PurchaseCourseProtectedRoute>
           </ProtectedRoute>
         ),
@@ -132,7 +142,7 @@ function App() {
   return (
     <main>
       <ThemeProvider>
-      <RouterProvider router={appRouter} />
+        <RouterProvider router={appRouter} />
       </ThemeProvider>
     </main>
   );

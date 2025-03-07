@@ -17,11 +17,11 @@ const BuyCourseButton = ({ courseId }) => {
        if(data?.url){
         window.location.href = data.url; // Redirect to stripe checkout url
        }else{
-        toast.error("Invalid response from server.")
+        toast.error("Phản hồi không hợp lệ từ máy chủ.")
        }
     } 
     if(isError){
-      toast.error(error?.data?.message || "Failed to create checkout session")
+      toast.error(error?.data?.message || "Không tạo được phiên thanh toán")
     }
   },[data, isSuccess, isError, error])
 
@@ -34,10 +34,10 @@ const BuyCourseButton = ({ courseId }) => {
       {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Please wait
+          Vui lòng chờ...
         </>
       ) : (
-        "Purchase Course"
+        "Mua khóa học"
       )}
     </Button>
   );

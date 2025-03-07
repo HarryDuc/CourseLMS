@@ -77,24 +77,24 @@ const Login = () => {
     console.log("registerError:", registerError);
     console.log("loginError:", loginError);
     if (registerIsSuccess && registerData) {
-      toast.success(registerData.message || "Signup successful.")
+      toast.success(registerData.message || "Đăng ký thành công.")
     }
     // if (registerError) {
     //   toast.error(registerError.data.message || "Signup Failed");
     // }
     if (registerError) {
-      const errorMessage = registerError?.data?.message || registerError?.error || "Signup Failed";
+      const errorMessage = registerError?.data?.message || registerError?.error || "Đăng ký thất bại";
       toast.error(errorMessage);
     }
     if (loginIsSuccess && loginData) {
-      toast.success(loginData.message || "Login successful.");
+      toast.success(loginData.message || "Đăng nhập thành công.");
       navigate("/");
     }
     // if (loginError) {
     //   toast.error(loginError.data.message || "login Failed");
     // }
-    if (loginError) { 
-      const errorMessage = loginError?.data?.message || loginError?.error || "Login Failed";
+    if (loginError) {
+      const errorMessage = loginError?.data?.message || loginError?.error || "Đăng nhập thất bại";
       toast.error(errorMessage);
     }
   }, [
@@ -108,8 +108,8 @@ const Login = () => {
 
   return (
     <div className="flex items-center w-full justify-center mt-20">
-      <Tabs  defaultValue={activeTab} value={activeTab}  className="w-[400px]">
-      <TabsList className="grid w-full grid-cols-2">
+      <Tabs defaultValue={activeTab} value={activeTab} className="w-[400px]">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup" id="signup" onClick={() => setActiveTab("signup")}>
             Đăng ký
           </TabsTrigger>
@@ -120,20 +120,20 @@ const Login = () => {
         <TabsContent value="signup">
           <Card>
             <CardHeader>
-              <CardTitle>Signup</CardTitle>
+              <CardTitle>Đăng ký</CardTitle>
               <CardDescription>
-                Create a new account and click signup when you're done.
+                Tạo một tài khoản mới và nhấp vào đăng ký khi bạn hoàn tất.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Tên</Label>
                 <Input
                   type="text"
                   name="name"
                   value={signupInput.name}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel"
+                  placeholder="Ví dụ: Tèo, tím"
                   required="true"
                 />
               </div>
@@ -144,18 +144,18 @@ const Login = () => {
                   name="email"
                   value={signupInput.email}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Ví dụ: teoteo@gmail.com"
                   required="true"
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="username">Password</Label>
+                <Label htmlFor="username">Mật khẩu</Label>
                 <Input
                   type="password"
                   name="password"
                   value={signupInput.password}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. xyz"
+                  placeholder="Ví dụ: duc@123"
                   required="true"
                 />
               </div>
@@ -167,11 +167,10 @@ const Login = () => {
               >
                 {registerIsLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                    wait
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vui lòng chờ
                   </>
                 ) : (
-                  "Signup"
+                  "Đăng ký"
                 )}
               </Button>
             </CardFooter>
@@ -180,9 +179,9 @@ const Login = () => {
         <TabsContent value="login">
           <Card>
             <CardHeader>
-              <CardTitle>Login</CardTitle>
+              <CardTitle>Đăng nhập</CardTitle>
               <CardDescription>
-                Login your password here. After signup, you'll be logged in.
+                Đăng nhập mật khẩu của bạn ở đây. Sau khi đăng ký, bạn sẽ được đăng nhập.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -193,18 +192,18 @@ const Login = () => {
                   name="email"
                   value={loginInput.email}
                   onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Ví dụ: vuminhduc.contact@gmail.com"
                   required="true"
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="new">Password</Label>
+                <Label htmlFor="new">Mật khẩu</Label>
                 <Input
                   type="password"
                   name="password"
                   value={loginInput.password}
                   onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. xyz"
+                  placeholder="ví dụ: duc@123"
                   required="true"
                 />
               </div>
@@ -216,11 +215,10 @@ const Login = () => {
               >
                 {loginIsLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                    wait
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vui lòng chờ
                   </>
                 ) : (
-                  "Login"
+                  "Đăng nhập"
                 )}
               </Button>
             </CardFooter>

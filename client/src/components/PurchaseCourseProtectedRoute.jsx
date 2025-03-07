@@ -6,7 +6,7 @@ const PurchaseCourseProtectedRoute = ({children}) => {
     const {courseId} = useParams();
     const {data, isLoading} = useGetCourseDetailWithStatusQuery(courseId);
 
-    if(isLoading) return <p>Loading...</p>
+    if(isLoading) return <p>Đang tải...</p>
 
     return data?.purchased ? children : <Navigate to={`/course-detail/${courseId}`}/>
 }

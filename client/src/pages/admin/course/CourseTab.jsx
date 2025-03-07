@@ -37,10 +37,10 @@ const CourseTab = () => {
   const params = useParams();
   const courseId = params.courseId;
   const handleRemoveCourse = async () => {
-    if (window.confirm("Are you sure you want to delete this course?")) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa khóa học này không?")) {
       try {
         await deleteCourse(courseId);
-        toast.success("Course deleted successfully!");
+        toast.success("Khóa học được xóa thành công!");
         navigate("/admin/course");
       } catch (error) {
         toast.error("Lỗi xóa khóa học.");
@@ -127,33 +127,33 @@ const CourseTab = () => {
         toast.success(response.data.message);
       }
     } catch (error) {
-      toast.error("Failed to publish or unpublish course");
+      toast.error("Không xuất bản hoặc hủy xuất bản khóa học");
     }
   }
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data.message || "Course update.");
+      toast.success(data.message || "Cập nhật khóa học.");
     }
     if (error) {
-      toast.error(error.data.message || "Failed to update course");
+      toast.error(error.data.message || "Lỗi cập nhât khóa học");
     }
   }, [isSuccess, error]);
 
-  if (courseByIdLoading) return <h1>Loading...</h1>
+  if (courseByIdLoading) return <h1>Đang tải...</h1>
 
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
         <div>
-          <CardTitle>Basic Course Information</CardTitle>
+          <CardTitle>Thông tin cơ bản khóa học</CardTitle>
           <CardDescription>
-            Make changes to your courses here. Click save when you're done.
+          Thực hiện các thay đổi đối với các khóa học của bạn tại đây. Nhấp vào lưu khi bạn hoàn tất.
           </CardDescription>
         </div>
         <div className="space-x-2">
           <Button disabled={courseByIdData?.course.lectures.length === 0} variant="outline" onClick={() => publishStatusHandler(courseByIdData?.course.isPublished ? "false" : "true")}>
-            {courseByIdData?.course.isPublished ? "Unpublished" : "Publish"}
+            {courseByIdData?.course.isPublished ? "Hủy xuất bản" : "Xuất bản"}
           </Button>
           <Button disabled={isLoadingDelete} variant="destructive" onClick={handleRemoveCourse}>
             {isLoadingDelete ? (
@@ -171,7 +171,7 @@ const CourseTab = () => {
       <CardContent>
         <div className="space-y-4 mt-5">
           <div>
-            <Label>Title</Label>
+            <Label>Tiêu đề</Label>
             <Input
               type="text"
               name="courseTitle"
@@ -181,32 +181,32 @@ const CourseTab = () => {
             />
           </div>
           <div>
-            <Label>Subtitle</Label>
+            <Label>Phụ đề</Label>
             <Input
               type="text"
               name="subTitle"
               value={input.subTitle}
               onChange={changeEventHandler}
-              placeholder="Ex. Become a Fullstack developer from zero to hero in 2 months"
+              placeholder="Ex. Trở thành một lập trình viên Fullstack trong 2 tháng"
             />
           </div>
           <div>
-            <Label>Description</Label>
+            <Label>Mô tả</Label>
             <RichTextEditor input={input} setInput={setInput} />
           </div>
           <div className="flex items-center gap-5">
             <div>
-              <Label>Category</Label>
+              <Label>Danh mục</Label>
               <Select
                 defaultValue={input.category}
                 onValueChange={selectCategory}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Category</SelectLabel>
+                    <SelectLabel>Danh mục</SelectLabel>
                     <SelectItem value="Next JS">Next JS</SelectItem>
                     <SelectItem value="Data Science">Data Science</SelectItem>
                     <SelectItem value="Frontend Development">
@@ -228,26 +228,26 @@ const CourseTab = () => {
               </Select>
             </div>
             <div>
-              <Label>Course Level</Label>
+              <Label>Trình độ</Label>
               <Select
                 defaultValue={input.courseLevel}
                 onValueChange={selectCourseLevel}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a course level" />
+                  <SelectValue placeholder="Chọn mức độ" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Course Level</SelectLabel>
-                    <SelectItem value="Beginner">Beginner</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Advance">Advance</SelectItem>
+                    <SelectLabel>Mức độ khóa học</SelectLabel>
+                    <SelectItem value="Beginner">Người mới</SelectItem>
+                    <SelectItem value="Medium">Trung bình</SelectItem>
+                    <SelectItem value="Advance">Nâng cao</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Price in (INR)</Label>
+              <Label>Giá (VND)</Label>
               <Input
                 type="number"
                 name="coursePrice"
@@ -259,7 +259,7 @@ const CourseTab = () => {
             </div>
           </div>
           <div>
-            <Label>Course Thumbnail</Label>
+            <Label>Hình ảnh đại diện khóa học</Label>
             <Input
               type="file"
               onChange={selectThumbnail}
@@ -270,22 +270,22 @@ const CourseTab = () => {
               <img
                 src={previewThumbnail}
                 className="e-64 my-2"
-                alt="Course Thumbnail"
+                alt="Ảnh đại diện khóa học"
               />
             )}
           </div>
           <div>
             <Button onClick={() => navigate("/admin/course")} variant="outline">
-              Cancel
+              Hủy
             </Button>
             <Button disabled={isLoading} onClick={updateCourseHandler}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
+                  Vui lòng chờ
                 </>
               ) : (
-                "Save"
+                "Lưu"
               )}
             </Button>
           </div>

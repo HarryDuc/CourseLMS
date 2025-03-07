@@ -19,13 +19,13 @@ const SearchResult = ({ course }) => {
           <h1 className="font-bold text-lg md:text-xl">{course.courseTitle}</h1>
           <p className="text-sm text-gray-600">{course.subTitle}</p>
           <p className="text-sm text-gray-700">
-            Intructor: <span className="font-bold">{course.creator?.name}</span>{" "}
+          Người hướng dẫn: <span className="font-bold">{course.creator?.name}</span>{" "}
           </p>
           <Badge className="w-fit mt-2 md:mt-0">{course.courseLevel}</Badge>
         </div>
       </Link>
       <div className="mt-4 md:mt-0 md:text-right w-full md:w-auto">
-        <h1 className="font-bold text-lg md:text-xl">₹{course.coursePrice}</h1>
+        <h1 className="font-bold text-lg md:text-xl">{course.coursePrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h1>
       </div>
     </div>
   );

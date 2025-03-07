@@ -18,10 +18,10 @@ const navigate = useNavigate();
     <div className="relative bg-gradient-to-r from-blue-500 to bg-indigo-600 dark:from-gray-800 dark:to-gray-900 py-24 px-4 text-center">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-white text-4xl font-bold mb-4">
-          Find the Best Courses for You
+          Tìm khóa học tốt nhất cho bạn
         </h1>
         <p className="text-gray-200 dark:text-gray-400 mb-8">
-          Discover, Learn, and Upskill with our wide range of courses
+          Khám phá, Học hỏi và Nâng cao kỹ năng với nhiều khóa học của chúng tôi
         </p>
 
         <form onSubmit={searchHandler} className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6">
@@ -29,12 +29,12 @@ const navigate = useNavigate();
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Courses"
+            placeholder="Tìm kiếm khóa học"
             className="flex-grow border-none focus-visible:ring-0 px-6 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
-          <Button type="submit" className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 dark:hover:bg-blue-800">Search</Button>
+          <Button type="submit" className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 dark:hover:bg-blue-800">Tìm kiếm</Button>
         </form>
-       <Button onClick={()=> navigate(`/course/search?query`)} className="bg-white dark:bg-gray-800 text-blue-600 rounded-full hover:bg-gray-200">Explore Courses</Button>
+       <Button onClick={()=> navigate(`/course/search?query`)} className="bg-white dark:bg-gray-800 text-blue-600 rounded-full hover:bg-gray-200">Khám phá các khóa học</Button>
       </div>
     </div>
   );

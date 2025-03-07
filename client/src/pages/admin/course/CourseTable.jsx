@@ -64,19 +64,19 @@ const CourseTable = () => {
     const {data, isLoading} = useGetCreatorCourseQuery();
   const navigate = useNavigate();
 
-  if(isLoading) return <h1>Loading...</h1>
+  if(isLoading) return <h1>Đang tải...</h1>
  
   return (
     <div>
       <Button onClick={() => navigate(`create`)}>Create a new course</Button>
       <Table>
-        <TableCaption>A list of your recent courses.</TableCaption>
+        <TableCaption>Danh sách các khóa học gần đây của bạn.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className="w-[100px]">Giá</TableHead>
+            <TableHead>Trạng thái</TableHead>
+            <TableHead>Tiêu đề</TableHead>
+            <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -47,21 +47,20 @@ const CreateLecture = () => {
     <div className="flex-1 mx-10">
       <div className="mb-4">
         <h1 className="font-bold text-xl">
-          Let's add lectures, add some basic details for your new lecture
+        Hãy thêm bài giảng, thêm một số chi tiết cơ bản cho bài giảng mới của bạn
         </h1>
         <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-          laborum!
+          Thêm bài giảng để thu hút học sinh
         </p>
       </div>
       <div className="space-y-4">
         <div>
-          <Label>Title</Label>
+          <Label>Tiêu đề</Label>
           <Input
             type="text"
             value={lectureTitle}
             onChange={(e) => setLectureTitle(e.target.value)}
-            placeholder="Your Title Name"
+            placeholder="Tiêu đề của bài giảng"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -69,26 +68,26 @@ const CreateLecture = () => {
             variant="outline"
             onClick={() => navigate(`/admin/course/${courseId}`)}
           >
-            Back to course
+            Về trang khóa học
           </Button>
           <Button disabled={isLoading} onClick={createLectureHandler}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
+                Vui lòng chờ
               </>
             ) : (
-              "Create lecture"
+              "Thêm bài giảng"
             )}
           </Button>
         </div>
         <div className="mt-10">
           {lectureLoading ? (
-            <p>Loading lectures...</p>
+            <p>Đang tải bài giảng...</p>
           ) : lectureError ? (
-            <p>Failed to load lectures.</p>
+            <p>Tải bài giảng thất bại.</p>
           ) : lectureData.lectures.length === 0 ? (
-            <p>No lectures availabe</p>
+            <p>Chưa có bài giảng nào</p>
           ) : (
             lectureData.lectures.map((lecture, index) => (
               <Lecture

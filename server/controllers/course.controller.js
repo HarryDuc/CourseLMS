@@ -78,7 +78,7 @@ export const getPublishedCourse = async (_, res) => {
         const courses = await Course.find({ isPublished: true }).populate({ path: "creator", select: "name photoUrl" });
         if (!courses) {
             return res.status(404).json({
-                message: "Course not found"
+                message: "Không tìm thấy khóa học"
             })
         }
         return res.status(200).json({
@@ -98,7 +98,7 @@ export const getCreatorCourses = async (req, res) => {
         if (!courses) {
             return res.status(404).json({
                 courses: [],
-                message: "Course not found"
+                message: "Không tìm thấy khóa học"
             })
         };
         return res.status(200).json({
@@ -120,7 +120,7 @@ export const editCourse = async (req, res) => {
         let course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({
-                message: "Course not found!"
+                message: "Không tìm thấy khóa học!"
             })
         }
         let courseThumbnail;
@@ -158,7 +158,7 @@ export const getCourseById = async (req, res) => {
 
         if (!course) {
             return res.status(404).json({
-                message: "Course not found!"
+                message: "Không tìm thấy khóa học!"
             })
         }
         return res.status(200).json({
@@ -210,7 +210,7 @@ export const getCourseLecture = async (req, res) => {
         const course = await Course.findById(courseId).populate("lectures");
         if (!course) {
             return res.status(404).json({
-                message: "Course not found"
+                message: "Không tìm thấy khóa học"
             })
         }
         return res.status(200).json({
@@ -365,7 +365,7 @@ export const deleteCourse2 = async (req, res) => {
         const deletedCourse = await Course.findByIdAndDelete(courseId);
 
         if (!deletedCourse) {
-            return res.status(404).json({ message: "Course not found!" });
+            return res.status(404).json({ message: "Không tìm thấy khóa học!" });
         }
 
         res.json({ message: "Course deleted successfully!" });
@@ -404,7 +404,7 @@ export const togglePublishCourse = async (req, res) => {
         const course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({
-                message: "Course not found!"
+                message: "Không tìm thấy khóa học!"
             });
         }
         // publish status based on the query paramter

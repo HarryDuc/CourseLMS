@@ -68,7 +68,7 @@ const LectureTab = () => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("video upload failed");
+        toast.error("Tải video thất bại");
       } finally {
         setMediaProgress(false);
       }
@@ -110,9 +110,9 @@ const LectureTab = () => {
     <Card>
       <CardHeader className="flex justify-between">
         <div>
-          <CardTitle>Edit Lecture</CardTitle>
+          <CardTitle>Chỉnh sửa bài giảng</CardTitle>
           <CardDescription>
-            Make changes and click save when done.
+          Thực hiện các thay đổi và nhấp vào lưu khi hoàn tất.
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
@@ -121,14 +121,14 @@ const LectureTab = () => {
               removeLoading ? <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
               Please wait
-              </> : "Remove Lecture"
+              </> : "Xóa bài giảng"
             }
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         <div>
-          <Label>Title</Label>
+          <Label>Tiêu đề</Label>
           <Input
             value={lectureTitle}
             onChange={(e) => setLectureTitle(e.target.value)}
@@ -150,7 +150,7 @@ const LectureTab = () => {
         </div>
         <div className="flex items-center space-x-2 my-5">
           <Switch checked={isFree} onCheckedChange={setIsFree} id="airplane-mode" />
-          <Label htmlFor="airplane-mode">Is this video FREE</Label>
+          <Label htmlFor="airplane-mode">Bài giảng miễn phí</Label>
         </div>
 
         {mediaProgress && (
@@ -165,8 +165,8 @@ const LectureTab = () => {
               {
                 isLoading ? <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                Please wait
-                </> : "Update Lecture"
+                Vui lòng chờ
+                </> : "Cập nhật bài giảng"
               }
             
           </Button>

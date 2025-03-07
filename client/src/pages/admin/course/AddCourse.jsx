@@ -34,43 +34,42 @@ const AddCourse = () => {
   };
 
   // for displaying toast
-  useEffect(()=>{
-    if(isSuccess){
-        toast.success(data?.message || "Course created.");
-        navigate("/admin/course");
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Thêm khóa học thành công.");
+      navigate("/admin/course");
     }
-  },[isSuccess, error])
+  }, [isSuccess, error])
 
   return (
     <div className="flex-1 mx-10">
       <div className="mb-4">
         <h1 className="font-bold text-xl">
-          Lets add course, add some basic course details for your new course
+          Hãy thêm khóa học, thêm một số chi tiết khóa học cơ bản cho khóa học mới của bạn
         </h1>
         <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-          laborum!
+          Thêm vào đây để bắt đầu thêm khóa học mới.
         </p>
       </div>
       <div className="space-y-4">
         <div>
-          <Label>Title</Label>
+          <Label>Tiêu đề</Label>
           <Input
             type="text"
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
-            placeholder="Your Course Name"
+            placeholder="Tên khóa học của bạn"
           />
         </div>
         <div>
-          <Label>Category</Label>
+          <Label>Danh mục</Label>
           <Select onValueChange={getSelectedCategory}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Chọn danh mục" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
+                <SelectLabel>Danh mục</SelectLabel>
                 <SelectItem value="Next JS">Next JS</SelectItem>
                 <SelectItem value="Data Science">Data Science</SelectItem>
                 <SelectItem value="Frontend Development">
@@ -93,16 +92,16 @@ const AddCourse = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => navigate("/admin/course")}>
-            Back
+            Trở lại
           </Button>
           <Button disabled={isLoading} onClick={createCourseHandler}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
+                Vui lòng chờ
               </>
             ) : (
-              "Create"
+              "Thêm"
             )}
           </Button>
         </div>

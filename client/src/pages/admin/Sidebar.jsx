@@ -9,11 +9,11 @@ const Sidebar = () => {
         <div className="space-y-4 ">
           <Link to="dashboard" className="flex items-center gap-2">
             <ChartNoAxesColumn size={22} />
-            <h1>Dashboard</h1>
+            <h1>Trang chủ</h1>
           </Link>
           <Link to="course" className="flex items-center gap-2">
             <SquareLibrary size={22} />
-            <h1>Courses</h1>
+            <h1>Khóa học</h1>
           </Link>
         </div>
       </div>

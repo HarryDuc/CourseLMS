@@ -1,5 +1,5 @@
 import { Menu, School } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,17 +32,23 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoutHandler = async () => {
     await logoutUser();
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data?.message || "User log out.");
+      toast.success(data?.message || "Đăng xuất thành công.");
       navigate("/login");
     }
   }, [isSuccess]);
-
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "auto";
+      document.body.removeAttribute("data-scroll-locked");
+    }
+  }, [isMenuOpen]);
   return (
     <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       {/* Desktop */}
@@ -61,7 +67,7 @@ const Navbar = () => {
         </>
         <div className="flex items-center gap-8">
           {user ? (
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={setIsMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <Avatar>
                   <AvatarImage
@@ -71,25 +77,28 @@ const Navbar = () => {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuContent
+                className="w-56"
+                onOpenAutoFocus={(e) => e.preventDefault()} // Ngăn chặn focus tự động vào input (nếu có)
+              >
+                <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link to="my-learning">My learning</Link>
+                    <Link to="my-learning">Khóa học đã mua</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     {" "}
-                    <Link to="profile">Edit Profile</Link>{" "}
+                    <Link to="profile">Chỉnh sửa hồ sơ</Link>{" "}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logoutHandler}>
-                    Log out
+                    Đăng xuất
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
+                    <DropdownMenuItem><Link to="/admin/dashboard">Thêm khóa học</Link></DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
@@ -110,7 +119,7 @@ const Navbar = () => {
       {/* Mobile device  */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E-learning</h1>
-        <MobileNavbar user={user}/>
+        <MobileNavbar user={user} />
       </div>
     </div>
   );
@@ -118,11 +127,18 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({user}) => {
+const MobileNavbar = ({ user }) => {
   const navigate = useNavigate();
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "auto";
+      document.body.removeAttribute("data-scroll-locked"); // Xóa thuộc tính chặn cuộn
+    }
+  }, [isMenuOpen]);
   return (
-    <Sheet>
+    <Sheet onOpenChange={setIsMenuOpen}>
       <SheetTrigger asChild>
         <Button
           size="icon"
@@ -132,21 +148,24 @@ const MobileNavbar = ({user}) => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
+      <SheetContent
+        className="flex flex-col"
+        onOpenAutoFocus={(e) => e.preventDefault()} // Ngăn chặn body bị khóa
+      >
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle> <Link to="/">E-Learning</Link></SheetTitle>
           <DarkMode />
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
+          <Link to="/my-learning">Khóa học đã mua</Link>
+          <Link to="/profile">Chỉnh sửa hồ sơ</Link>
           <p>Log out</p>
         </nav>
         {user?.role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit" onClick={()=> navigate("/admin/dashboard")}>Dashboard</Button>
+              <Button type="submit" onClick={() => navigate("/admin/dashboard")}>Thêm khóa học</Button>
             </SheetClose>
           </SheetFooter>
         )}

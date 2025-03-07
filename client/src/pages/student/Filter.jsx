@@ -48,23 +48,23 @@ const Filter = ({ handleFilterChange }) => {
   return (
     <div className="w-full md:w-[20%]">
       <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
+        <h1 className="font-semibold text-lg md:text-xl">Tùy chọn bộ lọc</h1>
         <Select onValueChange={selectByPriceHandler}>
           <SelectTrigger>
-            <SelectValue placeholder="Sort by" />
+            <SelectValue placeholder="Sắp xếp theo" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Sort by price</SelectLabel>
-              <SelectItem value="low">Low to High</SelectItem>
-              <SelectItem value="high">High to Low</SelectItem>
+              <SelectLabel>Sắp xếp theo giá</SelectLabel>
+              <SelectItem value="low">Thấp đến Cao</SelectItem>
+              <SelectItem value="high">Cao đến thấp</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
       <Separator className="my-4" />
       <div>
-        <h1 className="font-semibold mb-2">CATEGORY</h1>
+        <h1 className="font-semibold mb-2">LOẠI</h1>
         {categories.map((category) => (
           <div className="flex items-center space-x-2 my-2">
             <Checkbox

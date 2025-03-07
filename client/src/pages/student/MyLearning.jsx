@@ -8,12 +8,12 @@ const MyLearning = () => {
   const myLearning = data?.user.enrolledCourses || [];
   return (
     <div className="max-w-4xl mx-auto my-10 px-4 md:px-0">
-      <h1 className="font-bold text-2xl">MY LEARNING</h1>
+      <h1 className="font-bold text-2xl">KHÓA HỌC CỦA TÔI</h1>
       <div className="my-5">
         {isLoading ? (
           <MyLearningSkeleton />
         ) : myLearning.length === 0 ? (
-          <p>You are not enrolled in any course.</p>
+          <p>Bạn chưa đăng ký khóa học nào.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {myLearning.map((course, index) => (
