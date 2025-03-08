@@ -25,6 +25,10 @@ const Profile = () => {
   const [profilePhoto, setProfilePhoto] = useState("");
 
   const { data, isLoading, refetch } = useLoadUserQuery();
+  console.log("Raw User Data:", data);
+  console.log("User Object:", data?.user);
+  console.log("Enrolled Courses:", data?.user?.enrolledCourses);
+  console.log("Is Loading:", isLoading);
   const [
     updateUser,
     {
@@ -51,6 +55,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    console.log("Refetching user data...");
     refetch();
   }, []);
 
@@ -69,7 +74,7 @@ const Profile = () => {
   const user = data && data.user;
 
   console.log(user);
-  
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 my-10">

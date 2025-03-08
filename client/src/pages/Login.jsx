@@ -88,7 +88,10 @@ const Login = () => {
     }
     if (loginIsSuccess && loginData) {
       toast.success(loginData.message || "Đăng nhập thành công.");
-      navigate("/");
+      navigate("/", {
+        replace: true,
+        state: { reload: true }
+      });
     }
     // if (loginError) {
     //   toast.error(loginError.data.message || "login Failed");

@@ -14,6 +14,7 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import React from "react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
+import Comment from "@/components/Comment";
 
 const CourseDetail = () => {
   const params = useParams();
@@ -29,7 +30,7 @@ const CourseDetail = () => {
   console.log(purchased);
 
   const handleContinueCourse = () => {
-    if(purchased){
+    if (purchased) {
       navigate(`/course-progress/${courseId}`)
     }
   }
@@ -78,6 +79,10 @@ const CourseDetail = () => {
               ))}
             </CardContent>
           </Card>
+
+          <div className="bg-white rounded-lg shadow">
+            <Comment courseId={courseId} purchased={purchased} />
+          </div>
         </div>
         <div className="w-full lg:w-1/3">
           <Card>

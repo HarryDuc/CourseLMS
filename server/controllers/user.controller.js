@@ -5,7 +5,7 @@ import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const register = async (req,res) => {
     try {
-       
+
         const {name, email, password} = req.body; // patel214
         if(!name || !email || !password){
             return res.status(400).json({
@@ -81,13 +81,21 @@ export const logout = async (_,res) => {
         return res.status(500).json({
             success:false,
             message:"Failed to logout"
-        }) 
+        })
     }
 }
 export const getUserProfile = async (req,res) => {
     try {
         const userId = req.id;
-        const user = await User.findById(userId).select("-password").populate("enrolledCourses");
+        const user = await User.findById(userId)
+            .select("-password")
+            .populate({
+                path: "enrolledCourses",
+                populate: {
+                    path: "creator",
+                    select: "name photoUrl"
+                }
+            });
         if(!user){
             return res.status(404).json({
                 message:"Profile not found",
@@ -117,7 +125,7 @@ export const updateProfile = async (req,res) => {
             return res.status(404).json({
                 message:"User not found",
                 success:false
-            }) 
+            })
         }
         // extract public id of the old image from the url is it exists;
         if(user.photoUrl){

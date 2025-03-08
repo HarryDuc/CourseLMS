@@ -19,7 +19,7 @@ const BuyCourseButton = ({ courseId }) => {
        }else{
         toast.error("Phản hồi không hợp lệ từ máy chủ.")
        }
-    } 
+    }
     if(isError){
       toast.error(error?.data?.message || "Không tạo được phiên thanh toán")
     }

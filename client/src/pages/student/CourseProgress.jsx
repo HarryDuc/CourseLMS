@@ -7,16 +7,29 @@ import {
   useInCompleteCourseMutation,
   useUpdateLectureProgressMutation,
 } from "@/features/api/courseProgressApi";
+import { useLoadUserQuery } from "@/features/api/authApi";
 import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const CourseProgress = () => {
   const params = useParams();
+  const location = useLocation();
   const courseId = params.courseId;
   const { data, isLoading, isError, refetch } =
     useGetCourseProgressQuery(courseId);
+  const { refetch: refetchUser } = useLoadUserQuery();
+
+  useEffect(() => {
+    // Check if coming from successful payment
+    const isFromPayment = location.search.includes('success=true');
+    if (isFromPayment) {
+      // Reload both course progress and user data
+      refetch();
+      refetchUser();
+    }
+  }, [location]);
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
   const [
@@ -29,14 +42,14 @@ const CourseProgress = () => {
   ] = useInCompleteCourseMutation();
 
   useEffect(() => {
-    console.log(markCompleteData);
-
     if (completedSuccess) {
       refetch();
+      refetchUser();
       toast.success(markCompleteData.message);
     }
     if (inCompletedSuccess) {
       refetch();
+      refetchUser();
       toast.success(markInCompleteData.message);
     }
   }, [completedSuccess, inCompletedSuccess]);
