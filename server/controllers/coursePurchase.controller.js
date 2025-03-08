@@ -45,18 +45,21 @@ export const createCheckoutSession = async (req, res) => {
       metadata: {
         courseId: courseId,
         userId: userId,
+        purchaseId: newPurchase._id.toString()
       }
     });
 
     if (!session.url) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Error while creating session" });
+      return res.status(400).json({
+        success: false,
+        message: "Error while creating session"
+      });
     }
 
     // Save the purchase record
     newPurchase.paymentId = session.id;
     await newPurchase.save();
+    console.log("Created purchase record:", newPurchase);
 
     return res.status(200).json({
       success: true,
@@ -72,81 +75,160 @@ export const createCheckoutSession = async (req, res) => {
 };
 
 export const stripeWebhook = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const webhookSecret = process.env.WEBHOOK_ENDPOINT_SECRET;
+
+  console.log('Received webhook request');
+  console.log('Request body:', req.body);
+  console.log('Stripe signature:', sig);
+  console.log('Webhook secret:', webhookSecret);
+
   let event;
 
   try {
-    const payloadString = JSON.stringify(req.body, null, 2);
-    const secret = process.env.WEBHOOK_ENDPOINT_SECRET;
-
-    const header = stripe.webhooks.generateTestHeaderString({
-      payload: payloadString,
-      secret,
-    });
-
-    event = stripe.webhooks.constructEvent(payloadString, header, secret);
-  } catch (error) {
-    console.error("Webhook error:", error.message);
-    return res.status(400).send(`Webhook error: ${error.message}`);
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      webhookSecret
+    );
+    console.log('Event constructed successfully:', event.type);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   try {
-    // Handle the checkout session completed event
-    if (event.type === "checkout.session.completed") {
-      console.log("Checkout session completed event received");
-
+    if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
-      console.log("Session data:", session);
-
-      const purchase = await CoursePurchase.findOne({
-        paymentId: session.id,
-      });
-
-      if (!purchase) {
-        console.error("Purchase not found for session:", session.id);
-        return res.status(404).json({ message: "Purchase not found" });
-      }
-
-      console.log("Found purchase:", purchase);
-
-      // Update purchase status
-      purchase.status = "completed";
-      if (session.amount_total) {
-        purchase.amount = session.amount_total;
-      }
-      await purchase.save();
-      console.log("Purchase updated:", purchase);
-
-      // Update user's enrolledCourses
-      const updatedUser = await User.findByIdAndUpdate(
-        purchase.userId,
-        { $addToSet: { enrolledCourses: purchase.courseId } },
-        { new: true }
-      ).populate('enrolledCourses');
-
-      console.log("Updated user enrolled courses:", updatedUser.enrolledCourses);
-
-      // Update course's enrolledStudents
-      const updatedCourse = await Course.findByIdAndUpdate(
-        purchase.courseId,
-        { $addToSet: { enrolledStudents: purchase.userId } },
-        { new: true }
-      );
-
-      console.log("Updated course enrolled students:", updatedCourse.enrolledStudents);
-
-      // Create initial course progress
-      await CourseProgress.create({
-        userId: purchase.userId,
-        courseId: purchase.courseId,
-        completed: false,
-        lectureProgress: []
-      });
+      await handleSuccessfulPayment(session);
     }
 
     return res.status(200).json({ received: true });
   } catch (error) {
-    console.error("Error processing webhook:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.error('Error processing webhook:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Hàm xử lý thanh toán thành công
+const handleSuccessfulPayment = async (session) => {
+  console.log('Processing completed checkout session:', session.id);
+  console.log('Session metadata:', session.metadata);
+
+  const { courseId, userId, purchaseId } = session.metadata;
+
+  // 1. Update purchase status
+  const purchase = await CoursePurchase.findByIdAndUpdate(
+    purchaseId,
+    {
+      status: "completed",
+      amount: session.amount_total
+    },
+    { new: true }
+  );
+
+  if (!purchase) {
+    throw new Error(`Purchase not found: ${purchaseId}`);
+  }
+  console.log('Updated purchase:', purchase);
+
+  // 2. Update user's enrolledCourses
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $addToSet: { enrolledCourses: courseId } },
+    { new: true }
+  ).populate({
+    path: 'enrolledCourses',
+    populate: [
+      {
+        path: 'creator',
+        select: 'name photoUrl'
+      },
+      {
+        path: 'lectures'
+      }
+    ]
+  });
+
+  if (!updatedUser) {
+    throw new Error(`User not found: ${userId}`);
+  }
+  console.log('Updated user enrolled courses:', updatedUser.enrolledCourses);
+
+  // 3. Update course's enrolledStudents
+  const updatedCourse = await Course.findByIdAndUpdate(
+    courseId,
+    { $addToSet: { enrolledStudents: userId } },
+    { new: true }
+  );
+
+  if (!updatedCourse) {
+    throw new Error(`Course not found: ${courseId}`);
+  }
+  console.log('Updated course enrolled students:', updatedCourse.enrolledStudents);
+
+  // 4. Create course progress
+  const courseProgress = await CourseProgress.create({
+    userId,
+    courseId,
+    completed: false,
+    lectureProgress: []
+  });
+
+  console.log('Created course progress:', courseProgress);
+  return { purchase, updatedUser, updatedCourse, courseProgress };
+};
+
+// Endpoint để cập nhật trạng thái thanh toán thủ công khi redirect về
+export const handlePaymentSuccess = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
+
+    // Tìm purchase record gần nhất của user cho khóa học này
+    const purchase = await CoursePurchase.findOne({
+      courseId,
+      userId,
+      status: "pending"
+    }).sort({ createdAt: -1 });
+
+    if (!purchase) {
+      return res.status(404).json({
+        success: false,
+        message: "Purchase record not found"
+      });
+    }
+
+    // Kiểm tra trạng thái thanh toán với Stripe
+    const session = await stripe.checkout.sessions.retrieve(purchase.paymentId);
+
+    if (session.payment_status === "paid") {
+      // Xử lý thanh toán thành công
+      await handleSuccessfulPayment({
+        ...session,
+        metadata: {
+          courseId,
+          userId,
+          purchaseId: purchase._id.toString()
+        }
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Payment processed successfully"
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: "Payment not completed"
+    });
+  } catch (error) {
+    console.error('Error handling payment success:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to process payment"
+    });
   }
 };
 
@@ -175,20 +257,48 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   }
 };
 
-export const getAllPurchasedCourse = async (_, res) => {
+export const getAllPurchasedCourse = async (req, res) => {
   try {
-    const purchasedCourse = await CoursePurchase.find({
-      status: "completed",
-    }).populate("courseId");
-    if (!purchasedCourse) {
-      return res.status(404).json({
-        purchasedCourse: [],
+    const userId = req.id; // Lấy userId từ token
+
+    // Tìm tất cả các purchase đã completed của user
+    const purchasedCourses = await CoursePurchase.find({
+      userId: userId,
+      status: "completed"
+    }).populate({
+      path: "courseId",
+      populate: [
+        {
+          path: "creator",
+          select: "name photoUrl"
+        },
+        {
+          path: "lectures"
+        }
+      ]
+    });
+
+    console.log('Found purchased courses:', purchasedCourses);
+
+    if (!purchasedCourses || purchasedCourses.length === 0) {
+      return res.status(200).json({
+        success: true,
+        purchasedCourses: []
       });
     }
+
+    // Lấy ra chỉ thông tin khóa học
+    const courses = purchasedCourses.map(purchase => purchase.courseId);
+
     return res.status(200).json({
-      purchasedCourse,
+      success: true,
+      purchasedCourses: courses
     });
   } catch (error) {
-    console.log(error);
+    console.error('Error getting purchased courses:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get purchased courses"
+    });
   }
 };

@@ -12,6 +12,7 @@ import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { toast } from "sonner";
+import axios from "axios";
 
 const CourseProgress = () => {
   const params = useParams();
@@ -22,14 +23,32 @@ const CourseProgress = () => {
   const { refetch: refetchUser } = useLoadUserQuery();
 
   useEffect(() => {
-    // Check if coming from successful payment
-    const isFromPayment = location.search.includes('success=true');
-    if (isFromPayment) {
-      // Reload both course progress and user data
-      refetch();
-      refetchUser();
-    }
-  }, [location]);
+    const handlePaymentSuccess = async () => {
+      try {
+        // Kiểm tra xem có phải redirect từ thanh toán thành công không
+        const isFromPayment = location.search.includes('success=true');
+        if (isFromPayment) {
+          // Gọi API để cập nhật trạng thái thanh toán
+          await axios.post(
+            `http://localhost:8080/api/v1/purchase/course/${courseId}/payment-success`,
+            {},
+            { withCredentials: true }
+          );
+
+          toast.success("Thanh toán thành công!");
+
+          // Reload dữ liệu
+          refetch();
+          refetchUser();
+        }
+      } catch (error) {
+        console.error('Error handling payment success:', error);
+        toast.error(error.response?.data?.message || "Có lỗi xảy ra khi xử lý thanh toán");
+      }
+    };
+
+    handlePaymentSuccess();
+  }, [courseId, location.search]);
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
   const [

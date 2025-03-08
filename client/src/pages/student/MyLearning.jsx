@@ -1,23 +1,25 @@
 import React from "react";
 import Course from "./Course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 
-const MyLearning = () => { 
-  const {data, isLoading} = useLoadUserQuery();
+const MyLearning = () => {
+  const { data, isLoading } = useGetPurchasedCoursesQuery();
+  console.log("Purchased courses data:", data);
 
-  const myLearning = data?.user.enrolledCourses || [];
+  const purchasedCourses = data?.purchasedCourses || [];
+
   return (
     <div className="max-w-4xl mx-auto my-10 px-4 md:px-0">
       <h1 className="font-bold text-2xl">KHÓA HỌC CỦA TÔI</h1>
       <div className="my-5">
         {isLoading ? (
           <MyLearningSkeleton />
-        ) : myLearning.length === 0 ? (
+        ) : purchasedCourses.length === 0 ? (
           <p>Bạn chưa đăng ký khóa học nào.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {myLearning.map((course, index) => (
-              <Course key={index} course={course}/>
+            {purchasedCourses.map((course) => (
+              <Course key={course._id} course={course}/>
             ))}
           </div>
         )}

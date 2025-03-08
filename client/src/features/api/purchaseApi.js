@@ -27,6 +27,7 @@ export const purchaseApi = createApi({
         url: `/`,
         method: "GET",
       }),
+      providesTags: ['PurchasedCourses']
     }),
   }),
 });

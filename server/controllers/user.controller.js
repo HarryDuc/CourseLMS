@@ -91,23 +91,34 @@ export const getUserProfile = async (req,res) => {
             .select("-password")
             .populate({
                 path: "enrolledCourses",
-                populate: {
-                    path: "creator",
-                    select: "name photoUrl"
-                }
+                populate: [
+                    {
+                        path: "creator",
+                        select: "name photoUrl"
+                    },
+                    {
+                        path: "lectures"
+                    }
+                ]
             });
+
         if(!user){
             return res.status(404).json({
                 message:"Profile not found",
                 success:false
             })
         }
+
+        // Log để debug
+        console.log("User found:", user._id);
+        console.log("Enrolled courses:", user.enrolledCourses);
+
         return res.status(200).json({
             success:true,
             user
         })
     } catch (error) {
-        console.log(error);
+        console.error("Error in getUserProfile:", error);
         return res.status(500).json({
             success:false,
             message:"Failed to load user"
